@@ -733,6 +733,7 @@
 
         function openLightbox(index) {
           if (!filmPhotos.length) return;
+          lastTapTime = Date.now();
           lightboxIndex = (index + filmPhotos.length) % filmPhotos.length;
           var photo = filmPhotos[lightboxIndex];
           lightboxImg.src = photo.src;
@@ -782,6 +783,7 @@
         }
 
         var downPhotoIndex = null;
+        var lastTapTime = 0;
 
         viewports.forEach(function (viewport) {
           viewport.addEventListener(
@@ -843,6 +845,15 @@
             ) {
               return;
             }
+            if (
+              !dragging &&
+              downPhotoIndex !== null &&
+              Math.abs(event.clientX - dragStartX) +
+                Math.abs(event.clientY - dragStartY) <=
+                12
+            ) {
+              openLightbox(downPhotoIndex);
+            }
             if (dragging) {
               viewport.classList.remove("dragging");
             }
@@ -882,6 +893,16 @@
         });
         lightboxNext.addEventListener("click", function () {
           stepLightbox(1);
+        });
+
+        document.addEventListener("click", function (event) {
+          if (Date.now() - lastTapTime < 600) return;
+          var img = event.target.closest
+            ? event.target.closest(".film-frame img")
+            : null;
+          if (img && img.dataset.index !== undefined) {
+            openLightbox(Number(img.dataset.index));
+          }
         });
 
         window.addEventListener("keydown", function (event) {
