@@ -773,7 +773,15 @@
           if (wasDragging) {
             viewport.classList.remove("dragging");
           } else if (downPhotoIndex !== null) {
-            openLightbox(downPhotoIndex);
+            pendingOpenIndex = downPhotoIndex;
+            window.clearTimeout(openTimer);
+            openTimer = window.setTimeout(function () {
+              if (pendingOpenIndex !== null) {
+                var index = pendingOpenIndex;
+                pendingOpenIndex = null;
+                openLightbox(index);
+              }
+            }, 450);
           }
           dragging = false;
           pointerId = null;
@@ -784,6 +792,8 @@
 
         var downPhotoIndex = null;
         var lastTapTime = 0;
+        var pendingOpenIndex = null;
+        var openTimer = null;
 
         viewports.forEach(function (viewport) {
           viewport.addEventListener(
@@ -885,7 +895,12 @@
         });
 
         lightbox.addEventListener("click", function (event) {
-          if (event.target === lightbox) closeLightbox();
+          if (
+            event.target === lightbox &&
+            Date.now() - lastTapTime > 600
+          ) {
+            closeLightbox();
+          }
         });
         lightboxClose.addEventListener("click", closeLightbox);
         lightboxPrev.addEventListener("click", function () {
@@ -896,6 +911,13 @@
         });
 
         document.addEventListener("click", function (event) {
+          if (pendingOpenIndex !== null) {
+            var index = pendingOpenIndex;
+            pendingOpenIndex = null;
+            window.clearTimeout(openTimer);
+            openLightbox(index);
+            return;
+          }
           if (Date.now() - lastTapTime < 600) return;
           var img = event.target.closest
             ? event.target.closest(".film-frame img")
