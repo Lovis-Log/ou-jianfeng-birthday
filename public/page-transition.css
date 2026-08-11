@@ -1,0 +1,112 @@
+.page-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  visibility: hidden;
+  pointer-events: none;
+  background: #f4efe4;
+  transform: translateX(100%);
+  will-change: transform;
+}
+
+.page-transition::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 120px;
+  background: linear-gradient(
+    90deg,
+    rgba(20, 20, 20, 0.18),
+    transparent
+  );
+  pointer-events: none;
+}
+
+.page-transition.animating {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.page-transition.exit {
+  animation: paper-out 0.45s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+}
+
+.page-transition.enter {
+  transform: translateX(0);
+  animation: paper-in 0.55s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+}
+
+@keyframes paper-out {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes paper-in {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.page-transition.curtain {
+  background: transparent;
+  transform: none;
+}
+
+.page-transition.curtain::before,
+.page-transition.curtain::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50.5%;
+  background: #f4efe4;
+}
+
+.page-transition.curtain::before {
+  top: 0;
+}
+
+.page-transition.curtain::after {
+  bottom: 0;
+}
+
+.page-transition.curtain.enter::before {
+  animation: curtain-open-top 0.75s cubic-bezier(0.7, 0, 0.2, 1) forwards;
+}
+
+.page-transition.curtain.enter::after {
+  animation: curtain-open-bottom 0.75s cubic-bezier(0.7, 0, 0.2, 1) forwards;
+}
+
+@keyframes curtain-open-top {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-101%);
+  }
+}
+
+@keyframes curtain-open-bottom {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(101%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-transition {
+    display: none !important;
+  }
+}
