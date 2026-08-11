@@ -492,6 +492,34 @@
         }
       }
 
+      @media (max-width: 520px) {
+        .film-header {
+          padding-top: clamp(64px, 9vh, 78px);
+          padding-left: 16px;
+          padding-right: 16px;
+          text-align: left;
+        }
+
+        .film-title {
+          font-size: clamp(1rem, 3.4vw, 1.4rem);
+          max-width: calc(100vw - 190px);
+        }
+
+        .future-link {
+          top: 14px;
+          right: 12px;
+          padding: 7px 14px;
+          gap: 6px;
+          font-size: 12px;
+          box-shadow: none;
+        }
+
+        .future-link svg {
+          width: 14px;
+          height: 14px;
+        }
+      }
+
       @media (prefers-reduced-motion: reduce) {
         .film-viewport {
           scroll-behavior: auto;
